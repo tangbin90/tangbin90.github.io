@@ -1,0 +1,766 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OpenSSH," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="OpenSSH首先我们看一下官方对OpenSSH的说明：  OpenSSH is the premier connectivity tool for remote login with the SSH(Secure SHell) protocol. It encrypts all traffic to eliminate eavesdropping, connection hijacking, a">
+<meta name="keywords" content="OpenSSH">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于OpenSSH的端口转发">
+<meta property="og:url" content="http://yoursite.com/2017/05/12/OpensshPortForwarding/index.html">
+<meta property="og:site_name" content="Keep Coding">
+<meta property="og:description" content="OpenSSH首先我们看一下官方对OpenSSH的说明：  OpenSSH is the premier connectivity tool for remote login with the SSH(Secure SHell) protocol. It encrypts all traffic to eliminate eavesdropping, connection hijacking, a">
+<meta property="og:updated_time" content="2017-07-05T14:56:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于OpenSSH的端口转发">
+<meta name="twitter:description" content="OpenSSH首先我们看一下官方对OpenSSH的说明：  OpenSSH is the premier connectivity tool for remote login with the SSH(Secure SHell) protocol. It encrypts all traffic to eliminate eavesdropping, connection hijacking, a">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/12/OpensshPortForwarding/"/>
+
+
+
+
+
+  <title>基于OpenSSH的端口转发 | Keep Coding</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keep Coding</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Stay Hungry, Stay Foolish</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/12/OpensshPortForwarding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唐彬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keep Coding">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基于OpenSSH的端口转发</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-12T10:03:35+08:00">
+                2017-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/12/OpensshPortForwarding/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/05/12/OpensshPortForwarding/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="OpenSSH"><a href="#OpenSSH" class="headerlink" title="OpenSSH"></a>OpenSSH</h1><p>首先我们看一下官方对<a href="http://www.openssh.com/" title="OpenSSH官方" target="_blank" rel="external">OpenSSH的说明</a>：</p>
+<blockquote>
+<p>OpenSSH is the premier connectivity tool for remote login with the SSH(Secure SHell) protocol. It encrypts all traffic to eliminate eavesdropping, connection hijacking, and other attacks. In addition, OpenSSH provides a large suite of secure tunneling capabilities, several authentication methods, and sophisticated configuration options.</p>
+</blockquote>
+<p>简单的说OpenSSH是一个连接工具，是SSH协议的一个实现。那么这个SSH优势在哪里呢？通常我们登陆到远端系统的时候有多种方式，比如常见的Telnet，但是这种登陆方式的密码和数据是明文传递的。SSH将我们所有的传输做了加密处理，这样别人即使抓包也看不到信息了。</p>
+<p>这里提一下OpenSSL——前几年爆出漏洞，老罗还捐了不少门票的开源软件。OpenSSL提供了SSL(Secure Scket Layer)协议的开源实现。SSL是传输层和应用层的一个安全协议提供了一些加密算法，我们经常用的https就是通过SSL加密后http报文。</p>
+<p>有一些SSH的实现是基于SSL的，毕竟加密算法SSL已经帮你实现了，用起来很方便。所以SSH可以看作是：SSH=telnet+SSL。</p>
+<h1 id="OpenSSH端口转发"><a href="#OpenSSH端口转发" class="headerlink" title="OpenSSH端口转发"></a>OpenSSH端口转发</h1><p>OpenSSH提供了诸多的工具，其中本篇文章关注的是其中两个<code>ssh -L</code>和<code>ssh -R</code>。</p>
+<h2 id="本地端口转发"><a href="#本地端口转发" class="headerlink" title="本地端口转发"></a>本地端口转发</h2><p>本地端口转发可以将你本地的某个端口连接到服务器的端口。比如你想通过本地的8080端口连接到Ubuntu论坛，我们可以这么配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh -L 8080:www.ubuntuforums.org:80 localhost</div><div class="line">ssh -L &lt;local port&gt;:&lt;remote host&gt;:&lt;remote port&gt; &lt;SSH serverhost&gt;</div></pre></td></tr></table></figure>
+<p>这是个最基本的例子，我们来看一下这个转发过程：</p>
+<ol>
+<li>本地访问8080端口，浏览器输入localhost:8080。</li>
+<li>ssh服务一直在监听该端口，于是该请求通过ssh client端发送到ssh server端，即<code>&lt;SSH serverhost&gt;</code>。在这个例子里面ssh server端就是本地。</li>
+<li>server接收到数据后，转发到<code>&lt;remote host&gt;:&lt;remote port&gt;</code>，在本例中就是<code>www.ubuntuforums.org:80</code></li>
+<li>最后接收到的数据按照原路返回。</li>
+</ol>
+<p>这个过程会有一点绕，主要思想就是本地向SSH Client发送数据，指定目的地址，接下来的事情就交给SSH做。</p>
+<p>再看一个问题，有三台机器地址分别为A、B、C，现在A、C因为防火墙等原因无法直接访问，而B可以同时访问两个机器，那么A可以通过B访问C。在A中使用SSH服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh -L 1234:C:21 B</div></pre></td></tr></table></figure>
+<p>C的21端口为ftp端口，因此ftp连接A的1234端口即连接C的21端口。在A中输入ftp命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftp localhost:1234</div></pre></td></tr></table></figure>
+<h2 id="远程转发"><a href="#远程转发" class="headerlink" title="远程转发"></a>远程转发</h2><p>我们的例子还是上一节A、B、C三台机器，我们这一次在中转机器B中设置远程转发，远程转发的命令和本地转发相似：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh -R 1234:C:21 A</div><div class="line">ssh -R &lt;local port&gt;:&lt;remote host&gt;:&lt;remote port&gt; &lt;SSH serverhost&gt;</div></pre></td></tr></table></figure>
+<p>因为该命令是在B机器上执行，B是SSH服务的的Client端，A是Server端。但是从应用的角度来讲，A是需要连接B的，因此A是Client端，B是Server端。在应用的Server端设置SSH连接，这种方式就是远程转发。在本例中远程转发和本地转发的效果是一样的，可以通过A的1234端口登录C机器。</p>
+<h2 id="解除转发"><a href="#解除转发" class="headerlink" title="解除转发"></a>解除转发</h2><p>linux端通过kill命令解除转发：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ps aux | grep ssh</div><div class="line">kill &lt;id&gt;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OpenSSH/" rel="tag"># OpenSSH</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/10/Hello/" rel="next" title="Hello">
+                <i class="fa fa-chevron-left"></i> Hello
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/26/MyBatis最小系统搭建/" rel="prev" title="MyBatis最小系统搭建">
+                MyBatis最小系统搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="唐彬" />
+          <p class="site-author-name" itemprop="name">唐彬</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangbin90" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/itangbin/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenSSH"><span class="nav-number">1.</span> <span class="nav-text">OpenSSH</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenSSH端口转发"><span class="nav-number">2.</span> <span class="nav-text">OpenSSH端口转发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地端口转发"><span class="nav-number">2.1.</span> <span class="nav-text">本地端口转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程转发"><span class="nav-number">2.2.</span> <span class="nav-text">远程转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解除转发"><span class="nav-number">2.3.</span> <span class="nav-text">解除转发</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唐彬</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://Bingo.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/05/12/OpensshPortForwarding/';
+          this.page.identifier = '2017/05/12/OpensshPortForwarding/';
+          this.page.title = '基于OpenSSH的端口转发';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Bingo.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

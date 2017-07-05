@@ -1,0 +1,774 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="[object Object]," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="有一句老话叫做:  如果没有好好看官方文档，你是不会有好结果的。  不管这句话的出处是什么，重要的是不要从二手资料中去寻找答案，比如你现在正在看的这篇文章。这两天花了一些时间了解了MyBatis，并整合和Spring，过程不复杂但是不可避免踩了一些坑。 其实如果了解了MyBatis的机制，那么与Spring的整合就显得水到渠成了。首先，我们从搭建一个纯MyBatis环境开始。 MyBatis环境搭">
+<meta name="keywords" content="[object Object]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MyBatis最小系统搭建">
+<meta property="og:url" content="http://yoursite.com/2017/05/26/MyBatis最小系统搭建/index.html">
+<meta property="og:site_name" content="Keep Coding">
+<meta property="og:description" content="有一句老话叫做:  如果没有好好看官方文档，你是不会有好结果的。  不管这句话的出处是什么，重要的是不要从二手资料中去寻找答案，比如你现在正在看的这篇文章。这两天花了一些时间了解了MyBatis，并整合和Spring，过程不复杂但是不可避免踩了一些坑。 其实如果了解了MyBatis的机制，那么与Spring的整合就显得水到渠成了。首先，我们从搭建一个纯MyBatis环境开始。 MyBatis环境搭">
+<meta property="og:image" content="http://7xp3xc.com1.z0.glb.clouddn.com/201601/1499186581824.png">
+<meta property="og:updated_time" content="2017-07-05T15:00:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MyBatis最小系统搭建">
+<meta name="twitter:description" content="有一句老话叫做:  如果没有好好看官方文档，你是不会有好结果的。  不管这句话的出处是什么，重要的是不要从二手资料中去寻找答案，比如你现在正在看的这篇文章。这两天花了一些时间了解了MyBatis，并整合和Spring，过程不复杂但是不可避免踩了一些坑。 其实如果了解了MyBatis的机制，那么与Spring的整合就显得水到渠成了。首先，我们从搭建一个纯MyBatis环境开始。 MyBatis环境搭">
+<meta name="twitter:image" content="http://7xp3xc.com1.z0.glb.clouddn.com/201601/1499186581824.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/26/MyBatis最小系统搭建/"/>
+
+
+
+
+
+  <title>MyBatis最小系统搭建 | Keep Coding</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keep Coding</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Stay Hungry, Stay Foolish</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/26/MyBatis最小系统搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唐彬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keep Coding">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MyBatis最小系统搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-26T10:43:08+08:00">
+                2017-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/26/MyBatis最小系统搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/05/26/MyBatis最小系统搭建/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>有一句老话叫做:</p>
+<blockquote>
+<p>如果没有好好看官方文档，你是不会有好结果的。</p>
+</blockquote>
+<p>不管这句话的出处是什么，重要的是不要从二手资料中去寻找答案，比如你现在正在看的这篇文章。这两天花了一些时间了解了MyBatis，并整合和Spring，过程不复杂但是不可避免踩了一些坑。</p>
+<p>其实如果了解了MyBatis的机制，那么与Spring的整合就显得水到渠成了。首先，我们从搭建一个纯MyBatis环境开始。</p>
+<h1 id="MyBatis环境搭建"><a href="#MyBatis环境搭建" class="headerlink" title="MyBatis环境搭建"></a>MyBatis环境搭建</h1><p>原材料：intellij idea+maven+mysql</p>
+<p>新建一个maven的工程，在pom.xml中加入如下依赖包：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.39<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"><span class="comment">&lt;!--maven默认寻找资源文件是在main/resources目录下面，而一般情况下mapper文件放在类的同级别目录下面，因此需要在pom.xml中告诉maven搜寻资源文件的位置，否则会出现could not find resource报错。--&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">includes</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">includes</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>强烈建议使用maven管理项目的包依赖（如果你和我一样曾经被包依赖搞晕头）。</p>
+<p>MyBatis使用SqlSessionFactory作为每一个应用的核心，SqlSessionFactory由SqlSessionFactoryBuilder通过XML配置或者Configuration实例构建出来的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mInputStream inputStream = Resources.getResourceAsStream(resource);</div><div class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</div></pre></td></tr></table></figure>
+<p>从sqlSessionFactory中获取SqlSession，SqlSession可以获得执行已经映射过的SQL语句。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SqlSession session = sqlSessionFactory.openSession();</div></pre></td></tr></table></figure>
+<p>我们看一下完整测试程序：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">myBatisSimpleTest</span> </span>&#123;</div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">myBatisSimpleTest</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line">        String resource = <span class="string">"mybatis-config.xml"</span>;<span class="comment">//指出配置文件的位置</span></div><div class="line">        InputStream inputStream = Resources.getResourceAsStream(resource);<span class="comment">//读取配置文件</span></div><div class="line">        SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);<span class="comment">//由配置文件得到核心的SqlSessionFactoryBuilder</span></div><div class="line">        SqlSession session = sqlSessionFactory.openSession();<span class="comment">//开启一个事务，这里注意一下和Hibernate不同，Hibernate可以用getCurrentSession获取，并且自动close，mybatis是手动关闭的。</span></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            IUserInfoDAO userInfoDAO = session.getMapper(IUserInfoDAO.class);<span class="comment">//实例化</span></div><div class="line">            UserInfo userInfo = userInfoDAO.selectUser(<span class="string">"tangbin"</span>);</div><div class="line">            System.out.println(userInfo.toString());</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            session.close();<span class="comment">//关闭事务</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里应该会有个疑问：mybatis-config.xml是啥。</p>
+<h2 id="MyBatis全局配置文件"><a href="#MyBatis全局配置文件" class="headerlink" title="MyBatis全局配置文件"></a>MyBatis全局配置文件</h2><p>mybatis-config.xml是MyBatis的核心配置，用于获取数据库连接、事务作用域等等。设置mybatis-config.xml如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE configuration</span></div><div class="line">        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"</div><div class="line">        "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</div><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">properties</span> <span class="attr">resource</span>=<span class="string">"jdbc.properties"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">"development"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">"development"</span>&gt;</span></div><div class="line">          <span class="comment">&lt;!--采用JDBC提供的提交和回滚机制，而JDBC依赖数据源得到的连接来管理事务的作用域。--&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">"JDBC"</span>/&gt;</span></div><div class="line">          <span class="comment">&lt;!--这种数据源的实现利用“池”的概念将 JDBC 连接对象组织起来，避免了创建新的连接实例时所必需的初始化和认证时间。 这是一种使得并发 Web 应用快速响应请求的流行处理方式。--&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">"POOLED"</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driver"</span> <span class="attr">value</span>=<span class="string">"$&#123;driverClass&#125;"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;jdbcUrl&#125;"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"$&#123;username&#125;"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"$&#123;password&#125;"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">"org/mybatis/example/dao/userinfodao.xml"</span>/&gt;</span><span class="comment">&lt;!--这里我们要指定一个接口的映射文件，当然如果是注解的方式就没有必要了--&gt;</span></div><div class="line">        <span class="comment">&lt;!--&lt;mapper class="com.tangbin.dao.IUserDao"/&gt;--&gt;</span></div><div class="line">        <span class="comment">&lt;!--&lt;package name="com.tangbin.dao.IUserDao"/&gt;--&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>jdbc.properties必须在classpath能够找到的目录下面。最后看一下mappers，告诉了MyBatis映射文件的位置。mybatis-config.xml是MyBatis的SqlSessionFactory整体配置文件，接下来我们要为每一个接口中的每个方法做sql语句映射。</p>
+<h2 id="XML映射文件"><a href="#XML映射文件" class="headerlink" title="XML映射文件"></a>XML映射文件</h2><p>首先我们要声明一个接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.mybatis.example.dao;</div><div class="line"><span class="keyword">import</span> org.mybatis.example.entity.UserInfo;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IUserInfoDAO</span> </span>&#123;</div><div class="line">    <span class="function">UserInfo <span class="title">selectUser</span><span class="params">(String username)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其对应的映射文件如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE mapper</span></div><div class="line">        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"</div><div class="line">        "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"org.mybatis.example.dao.IUserInfoDAO"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectUser"</span> <span class="attr">parameterType</span>=<span class="string">"String"</span> <span class="attr">resultType</span>=<span class="string">"org.mybatis.example.entity.UserInfo"</span>&gt;</span><span class="comment">&lt;!--此处要注意where语句后的#部分要和接口参数名称一致，resultType为全名--&gt;</span></div><div class="line">        SELECT * from USER WHERE name=#&#123;username&#125;</div><div class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>其中username是我们传入查询条件。如果传入一个对象则同样需要指定相关对象类型：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"insertUser"</span> <span class="attr">parameterType</span>=<span class="string">"User"</span>&gt;</span></div><div class="line">  insert into users (id, username, password)</div><div class="line">  values (#&#123;id&#125;, #&#123;username&#125;, #&#123;password&#125;)</div><div class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>MyBaits的映射文件其实还有很多东西可以深入，比如一对多的问题等等，这里不再多说，毕竟我们的目标是建立一个最小的能够顺利运行的MyBatis框架。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>到这里一套MyBatis环境就搭建完毕了，下面我们用一张图来总结一下。</p>
+<p><img src="http://7xp3xc.com1.z0.glb.clouddn.com/201601/1499186581824.png" width="573"></p>
+<p>Mybatis有四个要素，这四个要素都是层层依赖的关系：</p>
+<ul>
+<li>SqlSessionFactory是每个Mybatis的核心，它用来构造每一个Mybatis的Session并操作Sql。它依赖于MyBatis-Config.xml</li>
+<li>MyBatis-Config.xml是MyBatis的全局配置文件，包含数据库的设置，并指出映射文件(XXXMaper.xml)的具体位置，用来构造SqlSessionFactory。</li>
+<li>映射文件XXXMapper.xml用来做接口每一个方法的映射，依赖于接口的定义。</li>
+<li>Interface定义我们要对数据库进行的操作。</li>
+</ul>
+<p>Mybatis框架的搭建就在这里告一段落，下一篇文章我们尝试将MyBatis与Spring结合起来。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/object-Object/" rel="tag"># [object Object]</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/12/OpensshPortForwarding/" rel="next" title="基于OpenSSH的端口转发">
+                <i class="fa fa-chevron-left"></i> 基于OpenSSH的端口转发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="唐彬" />
+          <p class="site-author-name" itemprop="name">唐彬</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangbin90" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/itangbin/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MyBatis环境搭建"><span class="nav-number">1.</span> <span class="nav-text">MyBatis环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MyBatis全局配置文件"><span class="nav-number">1.1.</span> <span class="nav-text">MyBatis全局配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML映射文件"><span class="nav-number">1.2.</span> <span class="nav-text">XML映射文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唐彬</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://Bingo.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/05/26/MyBatis最小系统搭建/';
+          this.page.identifier = '2017/05/26/MyBatis最小系统搭建/';
+          this.page.title = 'MyBatis最小系统搭建';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Bingo.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
